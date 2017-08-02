@@ -21,7 +21,7 @@ RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride N
 
 EXPOSE 80 443
 
-COPY src/ /var/www/html
+COPY index.php /var/www/html
 
 RUN chown -R apache:apache /var/www/html \
 	&& chmod 770 /var/www/html \
