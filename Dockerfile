@@ -27,8 +27,8 @@ RUN chown -R apache:apache /var/www/html \
 	&& chmod 770 /var/www/html \
 	&& chmod -R g+w /var/www/html
 
-CMD ["/usr/sbin/httpd", "-DFOREGROUND"]
+COPY run.sh /run.sh
+RUN chmod a+rx /run.sh
 
-
-
+ENTRYPOINT ["/run.sh"]
 
