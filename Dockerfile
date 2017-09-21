@@ -14,8 +14,11 @@ RUN	yum -y update \
     php56w-mbstring \
     php56w-dom \
     php56w-gd \
+    which \
     && rm -rf /var/cache/yum/* \
 	&& yum clean all
+
+# 'which' is needed for drush
 
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride None/AllowOverride All/i }' /etc/httpd/conf/httpd.conf
 
@@ -38,6 +41,7 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
  && rm /tmp/installer.php \
  && composer --ansi --version --no-interaction
 
+RUN composer global require drush/drush
 
 EXPOSE 80 443
 
