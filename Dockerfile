@@ -41,6 +41,10 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
  && rm /tmp/installer.php \
  && composer --ansi --version --no-interaction
 
+RUN curl https://drupalconsole.com/installer -L -o drupal.phar \
+ && mv drupal.phar /usr/local/bin/drupal \
+ && chmod +x /usr/local/bin/drupal
+
 RUN composer global require drush/drush
 
 EXPOSE 80 443
