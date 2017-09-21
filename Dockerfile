@@ -22,6 +22,12 @@ RUN	yum -y update \
 
 # 'which' is needed for drush
 
+# "Setting timezone to America/New_York"
+RUN grep -q "^date\.timezone = 'America/New_York'" /etc/php.ini \
+ || echo " \
+date.timezone = 'America/New_York' \
+" >> /etc/php.ini
+
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride None/AllowOverride All/i }' /etc/httpd/conf/httpd.conf
 
 
