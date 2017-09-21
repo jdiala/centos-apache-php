@@ -14,6 +14,7 @@ RUN	yum -y update \
     php56w-mbstring \
     php56w-dom \
     php56w-gd \
+    rsync \
     which \
     && rm -rf /var/cache/yum/* \
 	&& yum clean all

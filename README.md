@@ -5,3 +5,4 @@ Includes:
 - composer
 - drush
 - drupalconsole
+- rsync
