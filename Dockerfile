@@ -16,6 +16,7 @@ RUN	yum -y update \
     php56w-gd \
     rsync \
     which \
+    patch \
     && rm -rf /var/cache/yum/* \
 	&& yum clean all
 

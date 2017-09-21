@@ -6,3 +6,4 @@ Includes:
 - drush
 - drupalconsole
 - rsync
+- patch
