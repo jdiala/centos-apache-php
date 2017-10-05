@@ -18,6 +18,7 @@ RUN	yum -y update \
     rh-php56-php-mbstring \
     rh-php56-php-xml \
     rh-php56-php-gd \
+    rh-php56-php-fpm \
     && rm -rf /var/cache/yum/* \
 	&& yum clean all
 
@@ -30,8 +31,9 @@ RUN grep -q "^date\.timezone = 'America/New_York'" /etc/opt/rh/rh-php56/php.ini 
 date.timezone = 'America/New_York' \
 " >> /etc/opt/rh/rh-php56/php.ini
 
-RUN sed -i '/Include conf\.modules\.d\/\*\.conf/a LoadModule php5_module /opt/rh/httpd24/root/usr/lib64/httpd/modules/librh-php56-php5.so' /etc/httpd/conf/httpd.conf
-RUN sed -i '/AddType text\/html \.shtml/i \ \ \ \ AddType application/x-httpd-php .php .phtml .html .htm' /etc/httpd/conf/httpd.conf
+# Set FastCGI to php files
+RUN sed -i '/<IfModule mime_module>/i <FilesMatch \\.php\$>\n\ \ \ \ SetHandler "proxy:fcgi://127.0.0.1:9000"\n<FilesMatch>\n' /etc/httpd/conf/httpd.conf
+# Enable clean URLs
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride None/AllowOverride All/i }' /etc/httpd/conf/httpd.conf
 
 
