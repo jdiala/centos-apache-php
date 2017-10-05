@@ -1,7 +1,6 @@
 FROM centos:centos7
 MAINTAINER Jovette Diala <jdiala@keymind.com>
 
-
 RUN	yum -y update \
     && yum --setopt=tsflags=nodocs -y install \
     centos-release-scl \
@@ -31,6 +30,8 @@ RUN grep -q "^date\.timezone = 'America/New_York'" /etc/opt/rh/rh-php56/php.ini 
 date.timezone = 'America/New_York' \
 " >> /etc/opt/rh/rh-php56/php.ini
 
+RUN sed -i '/Include conf\.modules\.d\/\*\.conf/a LoadModule php5_module /opt/rh/httpd24/root/usr/lib64/httpd/modules/librh-php56-php5.so' /etc/httpd/conf/httpd.conf
+RUN sed -i '/AddType text\/html \.shtml/i \ \ \ \ AddType application/x-httpd-php .php .phtml .html .htm' /etc/httpd/conf/httpd.conf
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride None/AllowOverride All/i }' /etc/httpd/conf/httpd.conf
 
 
