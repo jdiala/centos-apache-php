@@ -1,32 +1,35 @@
 FROM centos:centos7
 MAINTAINER Jovette Diala <jdiala@keymind.com>
 
-RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
-    rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
 
 RUN	yum -y update \
-	&& yum --setopt=tsflags=nodocs -y install \
+    && yum --setopt=tsflags=nodocs -y install \
+    centos-release-scl \
+    scl-utils-build  \
+	&& yum --setopt=tsflags=nodocs -y install \    
     httpd \
     mod_ssl \
-    php56w \
-    php56w-opcache \
-    php56w-mysqlnd \
-    php56w-mbstring \
-    php56w-dom \
-    php56w-gd \
     rsync \
     which \
     patch \
+    rh-php56 \
+    rh-php56-php \
+    rh-php56-php-opcache \
+    rh-php56-php-mysqlnd \
+    rh-php56-php-mbstring \
+    rh-php56-php-xml \
+    rh-php56-php-gd \
     && rm -rf /var/cache/yum/* \
 	&& yum clean all
 
-# 'which' is needed for drush
+ENV PHP_VERSION=5.6 \
+    PATH=$PATH:/opt/rh/rh-php56/root/usr/bin
 
-# "Setting timezone to America/New_York"
-RUN grep -q "^date\.timezone = 'America/New_York'" /etc/php.ini \
+# Setting timezone to America/New_York
+RUN grep -q "^date\.timezone = 'America/New_York'" /etc/opt/rh/rh-php56/php.ini \
  || echo " \
 date.timezone = 'America/New_York' \
-" >> /etc/php.ini
+" >> /etc/opt/rh/rh-php56/php.ini
 
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride None/AllowOverride All/i }' /etc/httpd/conf/httpd.conf
 
@@ -53,6 +56,7 @@ RUN curl https://drupalconsole.com/installer -L -o drupal.phar \
  && mv drupal.phar /usr/local/bin/drupal \
  && chmod +x /usr/local/bin/drupal
 
+# 'which' is needed for drush
 RUN composer global require drush/drush
 
 EXPOSE 80 443
