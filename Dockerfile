@@ -19,6 +19,7 @@ RUN	yum -y update \
     rh-php56-php-xml \
     rh-php56-php-gd \
     rh-php56-php-fpm \
+    rh-php56-php-pecl-xdebug \
     && rm -rf /var/cache/yum/* \
 	&& yum clean all
 
@@ -37,7 +38,13 @@ RUN sed -it 's/listen = 127.0.0.1:9000/listen = 127.0.0.1:9009/' /etc/opt/rh/rh-
 RUN sed -i '/<IfModule mime_module>/i <FilesMatch \\.php\$>\n\ \ \ \ SetHandler "proxy:fcgi://127.0.0.1:9009"\n<\/FilesMatch>\n' /etc/httpd/conf/httpd.conf
 # Enable clean URLs
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride None/AllowOverride All/i }' /etc/httpd/conf/httpd.conf
-
+# Set xdebug
+RUN grep -q '^\[xdebug\]' /etc/opt/rh/rh-php56/php.ini \
+  || echo $'[xdebug] \n\
+zend_extension= "/opt/rh/rh-php56/root/usr/lib64/php/modules/xdebug.so" \n\
+xdebug.remote_enable = on \n\
+xdebug.remote_connect_back = on \n\
+xdebug.idekey = "vagrant"' >> /etc/opt/rh/rh-php56/php.ini
 
 ENV PATH "/composer/vendor/bin:$PATH"
 ENV COMPOSER_ALLOW_SUPERUSER 1
