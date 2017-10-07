@@ -28,9 +28,9 @@ ENV PHP_VERSION=5.6 \
 
 # Setting timezone to America/New_York
 RUN grep -q "^date\.timezone = 'America/New_York'" /etc/opt/rh/rh-php56/php.ini \
- || echo " \
-date.timezone = 'America/New_York' \
-" >> /etc/opt/rh/rh-php56/php.ini
+ || echo $'\n\
+date.timezone = \'America/New_York\'\n\
+' >> /etc/opt/rh/rh-php56/php.ini
 
 # Change FastCGI EXPOSE port
 RUN sed -it 's/listen = 127.0.0.1:9000/listen = 127.0.0.1:9009/' /etc/opt/rh/rh-php56/php-fpm.d/www.conf 
@@ -41,10 +41,11 @@ RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride N
 # Set xdebug
 RUN grep -q '^\[xdebug\]' /etc/opt/rh/rh-php56/php.ini \
   || echo $'[xdebug] \n\
-zend_extension= "/opt/rh/rh-php56/root/usr/lib64/php/modules/xdebug.so" \n\
 xdebug.remote_enable = on \n\
 xdebug.remote_connect_back = on \n\
-xdebug.idekey = "vagrant"' >> /etc/opt/rh/rh-php56/php.ini
+xdebug.idekey = "docker"\n\
+xdebug.max_nesting_level = 256\n\
+' >> /etc/opt/rh/rh-php56/php.ini
 
 ENV PATH "/composer/vendor/bin:$PATH"
 ENV COMPOSER_ALLOW_SUPERUSER 1
