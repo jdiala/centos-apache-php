@@ -31,8 +31,10 @@ RUN grep -q "^date\.timezone = 'America/New_York'" /etc/opt/rh/rh-php56/php.ini 
 date.timezone = 'America/New_York' \
 " >> /etc/opt/rh/rh-php56/php.ini
 
+# Change FastCGI EXPOSE port
+RUN sed -it 's/listen = 127.0.0.1:9000/listen = 127.0.0.1:9009/' /etc/opt/rh/rh-php56/php-fpm.d/www.conf 
 # Set FastCGI to php files
-RUN sed -i '/<IfModule mime_module>/i <FilesMatch \\.php\$>\n\ \ \ \ SetHandler "proxy:fcgi://127.0.0.1:9000"\n<\/FilesMatch>\n' /etc/httpd/conf/httpd.conf
+RUN sed -i '/<IfModule mime_module>/i <FilesMatch \\.php\$>\n\ \ \ \ SetHandler "proxy:fcgi://127.0.0.1:9009"\n<\/FilesMatch>\n' /etc/httpd/conf/httpd.conf
 # Enable clean URLs
 RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ { s/AllowOverride None/AllowOverride All/i }' /etc/httpd/conf/httpd.conf
 
