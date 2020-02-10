@@ -11,25 +11,25 @@ RUN	yum -y update \
     rsync \
     which \
     patch \
-    rh-php56 \
-    rh-php56-php \
-    rh-php56-php-opcache \
-    rh-php56-php-mysqlnd \
-    rh-php56-php-mbstring \
-    rh-php56-php-xml \
-    rh-php56-php-gd \
-    rh-php56-php-fpm \
+    rh-php72 \
+    rh-php72-php \
+    rh-php72-php-opcache \
+    rh-php72-php-mysqlnd \
+    rh-php72-php-mbstring \
+    rh-php72-php-xml \
+    rh-php72-php-gd \
+    rh-php72-php-fpm \
     && rm -rf /var/cache/yum/* \
 	&& yum clean all
 
-ENV PHP_VERSION=5.6 \
-    PATH=$PATH:/opt/rh/rh-php56/root/usr/bin
+ENV PHP_VERSION=7.2 \
+    PATH=$PATH:/opt/rh/rh-php72/root/usr/bin
 
 # Setting timezone to America/New_York
-RUN grep -q "^date\.timezone = 'America/New_York'" /etc/opt/rh/rh-php56/php.ini \
+RUN grep -q "^date\.timezone = 'America/New_York'" /etc/opt/rh/rh-php72/php.ini \
  || echo " \
 date.timezone = 'America/New_York' \
-" >> /etc/opt/rh/rh-php56/php.ini
+" >> /etc/opt/rh/rh-php72/php.ini
 
 # Set FastCGI to php files
 RUN sed -i '/<IfModule mime_module>/i <FilesMatch \\.php\$>\n\ \ \ \ SetHandler "proxy:fcgi://127.0.0.1:9000"\n<\/FilesMatch>\n' /etc/httpd/conf/httpd.conf
